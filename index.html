@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">-->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="script/jquery-ui.css">
+    <title>Hello, world!</title>
+</head>
+<body>
+    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-4 m-auto">
+
+        <h5 id="count" style="float: right; margin-right: 20px">0</h5>
+
+        <table id="users-table" class="table table-hover table-bordered border-dark table-sm caption-top">
+            <caption>Список пользователей</caption>
+            <thead style="display: none">
+                <tr>
+                    <th scope="col" rowspan="2" class="text-center" hidden col-ref="id">id</th>
+                    <th scope="col" rowspan="2" class="text-center" col-ref="name">Имя пользователя</th>
+                    <th scope="col" rowspan="2" class="text-center" col-ref="active">Акт</th>
+                    <th scope="col" rowspan="2" class="text-center" col-ref="person">Физическое лицо</th>
+                    <th scope="col" colspan="2" class="text-center" col-ref="roles">Роли</th>
+                    <th scope="col" rowspan="2" class="text-center" col-ref="tools">Действия</th>
+                </tr>
+                <tr id="roles-column"></tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot>
+                <tr>
+                    <div class="btn-group">
+                        <button class="btn btn-outline-primary" onclick="fillTable('users-table')">Заполнить таблицу</button>
+                        <button type="button" class="btn btn-primary mx-2">Добавить</button>
+                    </div>
+                </tr>
+            </tfoot>
+        </table>
+
+<!--        <div class="btn-group">-->
+<!--            <input type="text" oninput="change_text_input()" id="person-text-search" class="dropdown-toggle" data-bs-toggle="dropdown">-->
+<!--&lt;!&ndash;            <button class="btn btn-secondary dropdown-toggle" type="button" id="defaultDropdown" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false" hidden>&ndash;&gt;-->
+<!--&lt;!&ndash;                Default dropdown&ndash;&gt;-->
+<!--&lt;!&ndash;            </button>&ndash;&gt;-->
+<!--            <ul class="dropdown-menu" aria-labelledby="defaultDropdown" id="li-person"></ul>-->
+<!--        </div>-->
+
+        <h1>HELLO</h1>
+
+    </div>
+
+        <div>
+            <ul id="pagging-bar" class="pagination pagination-sm justify-content-center">
+
+            </ul>
+        </div>
+
+        <!-- Modal edit -->
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Modal title</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="EditForm" class="form-floating">
+                            <div class="mb-3 form-floating">
+                                <input type="text" class="form-control" id="inputEdit-User-Name" aria-describedby="inputEdit-User-Name-help" name="name" json="true">
+                                <label for="inputEdit-User-Name" class="form-label">Имя пользователя</label>
+                            </div>
+                            <div class="mb-3 form-floating">
+                                <input type="password" class="form-control" id="inputEdit-User-Password" name="password" json="true">
+                                <label for="inputEdit-User-Password" class="form-label">Пароль</label>
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="inputEdit-User-Active" name="active" json="true">
+                                <label class="form-check-label" for="inputEdit-User-Active">Есть доступ</label>
+                            </div>
+                            <div class="mb-3 form-floating">
+                                    <input class="form-control" id="inputEdit-User-Person" placeholder="Введите для поиска...">
+                                    <input class="form-control" id="inputEdit-User-Person-ID" name="person" hidden>
+                                    <label for="inputEdit-User-Person" class="form-label">Физическое лицо</label>
+                            </div>
+                            <table class="table table-hover table-bordered border-dark table-sm caption-top" name="roles">
+                                <caption>Роли пользователя</caption>
+                                <thead>
+                                    <th class="text-center">Роль</th>
+                                    <th class="text-center">Включен</th>
+                                </thead>
+                                <tbody id="inputEdit-User-Roles"></tbody>
+                            </table>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                                <button type="button" class="btn btn-primary" onclick="submitEditForm()">Сохранить</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- Modal delete -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-primary" onclick="submitDeleteForm()">Удалить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>-->
+    <!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>-->
+    <!--<script src="bootstrap/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>-->
+    <script type="text/javascript" src="script/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="script/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="script/main.js"></script>
+
+    <script type="text/javascript">
+        window.onload = function () {
+            roles = getRoles();
+            persons = getPersons();
+
+            // table
+            let rolesColumn = [];
+            for (let role of roles) {
+                rolesColumn.push(
+                    $('<th scope="col" class="text-center"></th>').text(role.name)
+                );
+            }
+            $('#roles-column').empty().append(rolesColumn);
+
+            modals.set('edit', new bootstrap.Modal(document.getElementById('editModal')));
+            modals.set('delete', new bootstrap.Modal(document.getElementById('deleteModal')));
+            //$('table').show(1000);
+            $('#users-table thead').show(200);
+
+        }
+    </script>
+
+</body>
+</html>
